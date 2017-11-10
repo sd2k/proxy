@@ -12,6 +12,8 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 
+TOP := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
 SHELL := /bin/bash
 LOCAL_ARTIFACTS_DIR ?= $(abspath artifacts)
 ARTIFACTS_DIR ?= $(LOCAL_ARTIFACTS_DIR)
@@ -29,6 +31,9 @@ clean:
 
 test:
 	@bazel $(BAZEL_STARTUP_ARGS) test $(BAZEL_TEST_ARGS) //...
+
+docker:
+  ${TOP}/script/release-docker debug
 
 check:
 	@script/check-license-headers
