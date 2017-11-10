@@ -42,4 +42,10 @@ artifacts:
 	bazel build tools/deb:istio-proxy
 	@script/push-debian.sh -c opt -p $(ARTIFACTS_DIR)
 
+restore_cache:
+	${TOP}/script/cache.sh restore
+
+artifacts_cached: restore_cache artifacts
+	${TOP}/script/cache.sh save
+
 .PHONY: build clean test check artifacts
