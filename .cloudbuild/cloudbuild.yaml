@@ -1,6 +1,4 @@
 steps:
-- name: gcr.io/cloud-builders/gsutil
-  args: ['cp', 'gs://$PROJECT_ID/proxy_cache', '/builder/home/bazel_cache.tgz']
 
 - name: 'gcr.io/istio-io/istio-builder:0.3.2'
   args: ['make', 'artifacts_cached', "ISTIO_TAGS=git_latest"]
