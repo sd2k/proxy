@@ -1,0 +1,5 @@
+pipeline:
+  build:
+      image: grc.io/istio-testing/istio-builder:latest
+    commands:
+      - make artifacts
