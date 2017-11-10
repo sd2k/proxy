@@ -32,14 +32,14 @@ clean:
 test:
 	@bazel $(BAZEL_STARTUP_ARGS) test $(BAZEL_TEST_ARGS) //...
 
-docker:
-  ${TOP}/script/release-docker debug
 
 check:
 	@script/check-license-headers
 	@script/check-style
 
-artifacts: build
+artifacts:
+	${TOP}/script/release-docker debug
+	bazel build tools/deb:istio-proxy
 	@script/push-debian.sh -c opt -p $(ARTIFACTS_DIR)
 
 .PHONY: build clean test check artifacts

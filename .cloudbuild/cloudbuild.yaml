@@ -1,13 +1,24 @@
 steps:
 - name: 'gcr.io/istio-io/istio-builder:0.3.2'
-  args: ['make', 'docker', "ISTIO_TAGS=git_latest"]
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'istio/docker:mixer', 'gcr.io/$PROJECT_ID/mixer:$BUILD_ID']
-images:
-- 'gcr.io/$PROJECT_ID/mixer'
-- 'gcr.io/$PROJECT_ID/pilot'
-- 'gcr.io/$PROJECT_ID/proxy_debug'
-- 'gcr.io/$PROJECT_ID/proxy_init'
-- 'gcr.io/$PROJECT_ID/istio-ca'
-timeout: 1800s
+  args: ['make', 'artifacts', "ISTIO_TAGS=git_latest"]
+#- name: 'gcr.io/istio-io/istio-builder:0.1'
+#  # TODO: create a 'repo' build step
+#  args: ['./script/build_repo.sh', 'sync']
 
+# Build the docker images - images will upload them
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/proxy_debug', '-f', 'bazel-bin/src/envoy/mixer/Dockerfile.debug', 'bazel-bin/src/envoy/mixer' ]
+
+# Build other artifacts ( deb files )
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', 'bazel-bin/tools/deb/istio-proxy.deb', 'gs://istio/istio-proxy-master.deb']
+
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', 'go/src/istio.io/pilot/bazel-bin/tools/deb/istio-agent.deb', 'gs://istio/istio-agent-master.deb']
+
+images:
+-  'gcr.io/$PROJECT_ID/proxy_debug'
+
+options:
+  machineType: 'N1_STANDARD_8'
+timeout: 1800s
