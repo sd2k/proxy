@@ -1,6 +1,6 @@
 steps:
 
-- name: 'gcr.io/istio-io/istio-builder:0.3.2'
+- name: 'gcr.io/istio-testing/istio-builder:latest'
   args: ['make', 'artifacts_cached', "ISTIO_TAGS=git_latest"]
 #- name: 'gcr.io/istio-io/istio-builder:0.1'
 #  # TODO: create a 'repo' build step
